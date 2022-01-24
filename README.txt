@@ -1,0 +1,1 @@
+composer.json and index.php are files created to allow Heroku to serve a JS-only app - they have no pertinence otherwise.
