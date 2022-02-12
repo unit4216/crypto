@@ -4,8 +4,19 @@ h1 {
     padding-top: 20px;
     font-size: 70px !important;
     text-decoration-thickness: 6px !important;
+    position:absolute;
+}
 
+#over{
+    left:500px;
+}
 
+#slash {
+    left:650px;
+}
+
+#under {
+    left:690px;
 }
 
 p {

@@ -6,16 +6,17 @@ $(function() {
 //function to retrieve coin names and api-friendly names for input validation/datalist
 async function getCoinList(){
 
-    //get list of coins
-    const res = await fetch('https://api.coingecko.com/api/v3/coins')
-    const data = await res.json();
-    const text = JSON.stringify(data);
-    const obj = JSON.parse(text);
+    //get list of coins and passes to parseCoinList
+    return await fetch('https://api.coingecko.com/api/v3/coins')
+    .then((response)=>response.json())
+    .then((responseJson)=>{parseCoinList(responseJson)});
 
+}
+function parseCoinList(obj){
+    
     //iterate over JSON to populate dict
     coinNameDict={};
     for (let i = 0; i < obj.length; i++) {
-        //var tempDict={};
         var id = obj[i].id;
         var name = obj[i].name;
         coinNameDict[name]=id;
@@ -25,14 +26,19 @@ async function getCoinList(){
     var coinList=Object.keys(coinNameDict)
 
     //use list to generate dropdown options for datalist under input box
-    var list = document.getElementById('options');
+    var optionsList = document.getElementById('options');
     coinList.forEach(function(item){
-    var option = document.createElement('option');
-    option.value = item;
-    list.appendChild(option);})
+        var option = document.createElement('option');
+        option.value = item;
+        console.log(item)
+        optionsList.appendChild(option);
+    })
 }
 
-getCoinList();
+//have to doc.ready this one as a subprocess accesses a DOM object
+$(function() {
+    getCoinList();
+});
 
 //init Datepicker
 $(document).ready(function() {
