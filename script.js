@@ -3,6 +3,11 @@ $(function() {
     AOS.init();
 });
 
+//set position for validation alert
+$(function() {
+    alertify.set('notifier','position', 'top-center');
+});
+
 //function to retrieve coin names and api-friendly names for input validation/datalist
 async function getCoinList(){
 
@@ -12,6 +17,8 @@ async function getCoinList(){
     .then((responseJson)=>{parseCoinList(responseJson)});
 
 }
+
+//parses returned coin name JSON and adds it to options for Coin Name input
 function parseCoinList(obj){
 
     //iterate over JSON to populate dict
@@ -26,7 +33,7 @@ function parseCoinList(obj){
     var coinList=Object.keys(coinNameDict)
 
     //use list to generate dropdown options for datalist under input box
-    var optionsList = document.getElementById('options');
+    var optionsList = document.getElementById('coinOptions');
     coinList.forEach(function(item){
         var option = document.createElement('option');
         option.value = item;
@@ -46,7 +53,7 @@ $(document).ready(function() {
 
 //get today's date
 var today = new Date();
-var todayFormatted = (today.getMonth()+1)+'/'+today.getDate()+'/'+today.getFullYear(); //add 1 to month because original month format is "digital" i.e. 0-11 instead of 1-12
+var todayFormatted = today.toLocaleDateString('en-US', {month: '2-digit', day: '2-digit', year: 'numeric'})
 
 //calculate dates for predetermined ranges
 var sevenDaysAgo = moment().subtract(7, 'days').format('MM/DD/YYYY');
@@ -54,45 +61,27 @@ var oneMonthAgo = moment().subtract(1, 'months').format('MM/DD/YYYY');
 var sixMonthsAgo = moment().subtract(6, 'months').format('MM/DD/YYYY');
 var oneYearAgo = moment().subtract(1, 'year').format('MM/DD/YYYY');
 
-//functions for predetermined range buttons
-function last7Days() {
-    var temp=document.getElementById("startDate").value;
-    temp=`${sevenDaysAgo}`
-    document.getElementById("startDate").value=temp;
+//populate inputs onclick with selected dates
+function presetDates(timeframe){
 
-    var temp2=document.getElementById("endDate").value;
-    temp2=todayFormatted
-    document.getElementById("endDate").value=temp2;
+    switch(timeframe){
+        case 'sevenDaysAgo':
+            startDatePreset=`${sevenDaysAgo}`;
+            break;
+        case 'oneMonthAgo':
+            startDatePreset=`${oneMonthAgo}`;
+            break;
+        case 'sixMonthsAgo':
+            startDatePreset=`${sixMonthsAgo}`;
+            break;
+        case 'oneYearAgo':
+            startDatePreset=`${oneYearAgo}`;
+            break;
     }
 
-function lastMonth(){
-    var temp=document.getElementById("startDate").value;
-    temp=`${oneMonthAgo}`
-    document.getElementById("startDate").value=temp;
+    document.getElementById("startDate").value=startDatePreset;
+    document.getElementById("endDate").value=todayFormatted;
 
-    var temp2=document.getElementById("endDate").value;
-    temp2=todayFormatted
-    document.getElementById("endDate").value=temp2;
-}
-
-function last6Months(){
-    var temp=document.getElementById("startDate").value;
-    temp=`${sixMonthsAgo}`
-    document.getElementById("startDate").value=temp;
-
-    var temp2=document.getElementById("endDate").value;
-    temp2=todayFormatted
-    document.getElementById("endDate").value=temp2;
-}
-
-function lastYear(){
-    var temp=document.getElementById("startDate").value;
-    temp=`${oneYearAgo}`
-    document.getElementById("startDate").value=temp;
-
-    var temp2=document.getElementById("endDate").value;
-    temp2=todayFormatted
-    document.getElementById("endDate").value=temp2;
 }
 
 //main function
@@ -100,9 +89,6 @@ async function returnChart(){
 
     //start loading gif
     document.getElementById("loading").style.visibility = "visible";
-
-    //set position for validation alert
-    alertify.set('notifier','position', 'top-center');
 
     //get user inputs
     var coinNameInput = document.getElementById('coinName').value;
@@ -122,7 +108,7 @@ async function returnChart(){
             document.getElementById("loading").style.visibility = "hidden";
         }
 
-    return;
+        return;
     }
 
     //retrieves URL-friendly coin name from coinNameDict
@@ -134,21 +120,18 @@ async function returnChart(){
 
     //fetch API data
     const res = await fetch(`https://api.coingecko.com/api/v3/coins/${coinName}/market_chart/range?vs_currency=usd&from=${unixStart}&to=${unixEnd}`)
-    const data = await res.json();
-    const text = JSON.stringify(data);
-    const obj = JSON.parse(text);
+    const obj = await res.json();
     var prices = obj.prices
-    var prices_text=JSON.stringify(prices)
 
     //clear previous chart from div
     document.getElementById('chartContainer').innerHTML = "";
     
     //create copy of data where unix timestamp has been converted to readable time so that datetime can be readable on tooltip
-    prices_copy=JSON.parse(JSON.stringify(prices));
+    pricesReadable=JSON.parse(JSON.stringify(prices));
 
-    for (i = 0; i < prices_copy.length; i++){
+    for (i = 0; i < pricesReadable.length; i++){
         
-        var x = prices_copy[i][0];
+        var x = pricesReadable[i][0];
 
         //convert datetime format
         var x = new Date(x);
@@ -159,11 +142,10 @@ async function returnChart(){
 
         //remove seconds from time
         time = time.slice(0,-6)+time.slice(-3)
-
         x = month +'/'+date+'/'+year+' '+time;
 
         //reassign value in list
-        prices_copy[i][0]=x;
+        pricesReadable[i][0]=x;
     }
 
     //format y axis data
@@ -189,10 +171,9 @@ async function returnChart(){
         
         //create chart
         var chart = anychart.line(); //set type of chart (line)
-        var series1 = chart.spline(prices_copy); //set data set for chart, define series
-        series1.name(`${coinNameInput} price`); //name series
+        var priceSeries = chart.spline(pricesReadable); //set data set for chart, define series
+        priceSeries.name(`${coinNameInput} price`); //name series
         chart.container('chartContainer'); //specify what div to send it to
-
 
         //format price in tooltip 
         var tooltip = chart.tooltip();
@@ -213,13 +194,12 @@ async function returnChart(){
         //function to format Y axis
         formatYAxis();
 
-        //enable x-axis scroll
+        //enable x-axis scroll 
         chart.xScroller(true);
-
 
     }
 
-    //if regressions is checked, perform regression
+    //if regression is checked, perform regression
     if(document.getElementById('regressionCheck').checked){
         
         //getting the regression object
@@ -232,12 +212,12 @@ async function returnChart(){
         //function that actually plots the data
         anychart.onDocumentReady(function () {
          
-            var data_1 = prices;
-            var data_2 = setTheoryData(prices);
+            var priceData = prices;
+            var regressionData = returnRegressionData(prices);
 
-            //copy formatted datetime values from prices_copy to regression object "data_2"
-            for (i = 0; i < data_2.length; i++){
-                data_2[i][0] = prices_copy[i][0]
+            //copy formatted datetime values from pricesReadable to regression object "regressionData"
+            for (i = 0; i < regressionData.length; i++){
+                regressionData[i][0] = pricesReadable[i][0]
             }
 
             chart = anychart.line();
@@ -245,19 +225,19 @@ async function returnChart(){
             chart.legend(true);
           
             // creating the first series (marker) and setting the experimental data
-            var series1 = chart.line(prices_copy);
-            series1.name(`${coinNameInput} price`);
-            series1.markers(false);
+            var priceSeries = chart.line(pricesReadable);
+            priceSeries.name(`${coinNameInput} price`);
+            priceSeries.markers(false);
 
             //function to format Y axis
             formatYAxis();
           
             // creating the second series (line) and setting the theoretical data
-            var series2 = chart.line(data_2);
-            series2.name("Regression price");
-            series2.markers(false);
+            var regressionSeries = chart.line(regressionData);
+            regressionSeries.name("Regression price");
+            regressionSeries.markers(false);
 
-            //enable chart x-axis scroll
+            //enable x-axis scroll
             chart.xScroller(true);
             
             //format prices in tooltip 
@@ -277,18 +257,15 @@ async function returnChart(){
             //define overOrUnder function
             function overOrUnder(){
     
-                if(data_1[data_1.length-1][1] > data_2[data_2.length-1][1]){
-                    //document.getElementById("under").style.textDecoration = "line-through";
-                    //document.getElementById("over").style.textDecoration = "none";
+                if(priceData[priceData.length-1][1] > regressionData[regressionData.length-1][1]){
+
                     document.getElementById("over").innerHTML='overvalued';
                     document.getElementById("under").innerHTML='';
                     document.getElementById("slash").innerHTML='';
 
-
                 }
-                else if(data_1[data_1.length-1][1] < data_2[data_2.length-1][1]){
-                    //document.getElementById("over").style.textDecoration = "line-through";
-                    //document.getElementById("under").style.textDecoration = "none";
+                else if(priceData[priceData.length-1][1] < regressionData[regressionData.length-1][1]){
+
                     document.getElementById("over").innerHTML='undervalued';
                     document.getElementById("under").innerHTML='';
                     document.getElementById("slash").innerHTML='';
@@ -296,7 +273,6 @@ async function returnChart(){
                 }
                 
             }
-            
 
         });
           
@@ -312,7 +288,7 @@ async function returnChart(){
           
         //setting theoretical data array of [X][Y] using experimental X coordinates
         //this works with all types of regression
-        function setTheoryData(prices) {
+        function returnRegressionData(prices) {
             var theoryData = [];
             for (var i = 0; i < prices.length; i++) {
               theoryData[i] = [prices[i][0], formula(coeff, prices[i][0])];

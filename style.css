@@ -8,51 +8,31 @@ h1 {
 }
 
 #title {
-    padding-bottom:100px
+    padding-bottom: 100px
 }
 
 #over{
-    left:500px;
+    left: 500px;
 }
 
 #slash {
-    left:650px;
+    left: 650px;
 }
 
 #under {
     left:690px;
 }
 
-p {
-    font-size: 12px;
-    font-family: Segoe UI Light;
-    text-align: center;
-}
-
 .alertify {
-    border-radius:25px;
-}
-
-#loading {
-    visibility:hidden;
-    position:absolute;
-    top:210px;
-    right:220px;
-    z-index: 1 !important;
-}
-
-#chartContainer {
-    width: 500px; 
-    height: 400px;
-    margin-top: 2.5rem;
+    border-radius: 25px;
 }
 
 #predefinedRangesLabel {
-    margin-left:67px;
+    margin-left: 67px;
 }
 
 form {
-    margin-top:5.2rem;
+    margin-top: 5.2rem;
 }
 
 .spacing {
@@ -65,4 +45,24 @@ form {
 
 #submit {
     margin-top: 1rem;
+}
+
+#chartContainer {
+    width: 500px; 
+    height: 400px;
+    margin-top: 2.5rem;
+}
+
+#loading {
+    visibility:hidden;
+    position:absolute;
+    top:210px;
+    right:220px;
+    z-index: 1 !important;
+}
+
+p {
+    font-size: 12px;
+    font-family: Segoe UI Light;
+    text-align: center;
 }

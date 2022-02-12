@@ -60,8 +60,8 @@
                     <form>
                         <div class='form-group'>
                             <label for="coinName">Coin name</label>
-                            <input list='options' class='form-control' id='coinName' placeholder='ex. Bitcoin, Ethereum, etc.' autocomplete='off'>
-                            <datalist id='options'></datalist>
+                            <input list='coinOptions' class='form-control' id='coinName' placeholder='ex. Bitcoin, Ethereum, etc.' autocomplete='off'>
+                            <datalist id='coinOptions'></datalist>
                         </div>
                         
                         
@@ -76,10 +76,10 @@
                         
                         <label for="dates" class='spacing' id='predefinedRangesLabel'>Predefined ranges</label>
                             <div class='input-group justify-content-center'>
-                                <button type='button' class="btn btn-secondary" onclick=last7Days();>Last 7 days</button>
-                                <button type='button' class="btn btn-secondary" onclick=lastMonth();>Last month</button>
-                                <button type='button' class="btn btn-secondary" onclick=last6Months();>Last 6 months</button>
-                                <button type='button' class="btn btn-secondary" onclick=lastYear();>Last year</button>
+                                <button type='button' class="btn btn-secondary" onclick="presetDates('sevenDaysAgo');">Last 7 days</button>
+                                <button type='button' class="btn btn-secondary" onclick="presetDates('oneMonthAgo');">Last month</button>
+                                <button type='button' class="btn btn-secondary" onclick="presetDates('sixMonthsAgo');">Last 6 months</button>
+                                <button type='button' class="btn btn-secondary" onclick="presetDates('oneYearAgo');">Last year</button>
                             </div>
 
                         <input class="form-check-input" type="checkbox" value="" id="regressionCheck">
