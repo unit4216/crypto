@@ -7,6 +7,10 @@ h1 {
     position:absolute;
 }
 
+#title {
+    padding-bottom:100px
+}
+
 #over{
     left:500px;
 }
@@ -29,5 +33,36 @@ p {
     border-radius:25px;
 }
 
+#loading {
+    visibility:hidden;
+    position:absolute;
+    top:210px;
+    right:220px;
+    z-index: 1 !important;
+}
 
+#chartContainer {
+    width: 500px; 
+    height: 400px;
+    margin-top: 2.5rem;
+}
 
+#predefinedRangesLabel {
+    margin-left:67px;
+}
+
+form {
+    margin-top:5.2rem;
+}
+
+.spacing {
+    margin-top: 1.5rem;
+}
+
+#regressionCheck {
+    margin-top: 1.8rem;
+}
+
+#submit {
+    margin-top: 1rem;
+}

@@ -48,7 +48,7 @@
 
     <body>
 
-        <div class='container' style='padding-bottom:100px'>
+        <div id='title'>
             <h1 data-aos='fade-down' data-aos-duration='1000' id='over'>over</h1>
             <h1 id='slash'>/</h1>
             <h1 data-aos='fade-up' data-aos-duration='1000' id='under'>under</h1>
@@ -58,41 +58,40 @@
             <div class='row'>
                 <div class='col-md-6'>
                     <form>
-                        <br><br><br><br>
                         <div class='form-group'>
                             <label for="coinName">Coin name</label>
                             <input list='options' class='form-control' id='coinName' placeholder='ex. Bitcoin, Ethereum, etc.' autocomplete='off'>
-                            <datalist id='options'>
-                            </datalist>
+                            <datalist id='options'></datalist>
                         </div>
                         
-                        <br>
-                        <label for="dates">Date range of data</label>
+                        
+                        <label for="dates" class="spacing">Date range of data</label>
 
                         <div class='form-group input-group'>
                             <input type="text" class="form-control" placeholder='mm/dd/YYYY' autocomplete='off' data-provide='datepicker' id='startDate'>
                             <div class="input-group-append"><span class='input-group-text'>to</span></div>
                             <input type="text" class="form-control" placeholder='mm/dd/YYYY' autocomplete='off' data-provide='datepicker' id='endDate'>
                         </div>
-                        <br>
-                        <label for="dates" style="margin-left:67px">Predefined ranges</label>
+
+                        
+                        <label for="dates" class='spacing' id='predefinedRangesLabel'>Predefined ranges</label>
                             <div class='input-group justify-content-center'>
                                 <button type='button' class="btn btn-secondary" onclick=last7Days();>Last 7 days</button>
                                 <button type='button' class="btn btn-secondary" onclick=lastMonth();>Last month</button>
                                 <button type='button' class="btn btn-secondary" onclick=last6Months();>Last 6 months</button>
                                 <button type='button' class="btn btn-secondary" onclick=lastYear();>Last year</button>
                             </div>
-                        <br>
+
                         <input class="form-check-input" type="checkbox" value="" id="regressionCheck">
-                        <label class="form-check-label" for="regressionCheck">Perform regression</label>
-                        <br><br>
-                        <button type="button" class="btn btn-primary" onclick=returnChart()>Submit</button>
+                        <label class="form-check-label spacing" for="regressionCheck">Perform regression</label>
+                        
+                        <br>
+                        <button type="button" class="btn btn-primary" id='submit' onclick=returnChart()>Submit</button>
 
                     </form>
                 </div>
                 <div class='col-md-6'>
-                    <br><br>
-                    <div id="container" style="width: 500px; height: 400px;">
+                    <div id="chartContainer">
                     <!--chart goes here-->
                     </div>
                 </div>
@@ -101,9 +100,9 @@
 
         </div>
         <br>
-        <p>copyright 2021 @noconceptla + powered by coingecko api</p>
+        <p>copyright 2022 @noconceptla + powered by coingecko api</p>
 
-        <img src="loading7.gif" height='240' width='360' id="loading" style="visibility:hidden;position:absolute;top:210px;right:220px">
+        <img src="loading7.gif" height='240' width='360' id="loading">
         
     </body>
 

@@ -13,7 +13,7 @@ async function getCoinList(){
 
 }
 function parseCoinList(obj){
-    
+
     //iterate over JSON to populate dict
     coinNameDict={};
     for (let i = 0; i < obj.length; i++) {
@@ -30,12 +30,11 @@ function parseCoinList(obj){
     coinList.forEach(function(item){
         var option = document.createElement('option');
         option.value = item;
-        console.log(item)
         optionsList.appendChild(option);
     })
 }
 
-//have to doc.ready this one as a subprocess accesses a DOM object
+//have to doc.ready this one as a subprocess of the function accesses a DOM object
 $(function() {
     getCoinList();
 });
@@ -142,7 +141,7 @@ async function returnChart(){
     var prices_text=JSON.stringify(prices)
 
     //clear previous chart from div
-    document.getElementById('container').innerHTML = "";
+    document.getElementById('chartContainer').innerHTML = "";
     
     //create copy of data where unix timestamp has been converted to readable time so that datetime can be readable on tooltip
     prices_copy=JSON.parse(JSON.stringify(prices));
@@ -192,7 +191,7 @@ async function returnChart(){
         var chart = anychart.line(); //set type of chart (line)
         var series1 = chart.spline(prices_copy); //set data set for chart, define series
         series1.name(`${coinNameInput} price`); //name series
-        chart.container('container'); //specify what div to send it to
+        chart.container('chartContainer'); //specify what div to send it to
 
 
         //format price in tooltip 
@@ -269,7 +268,7 @@ async function returnChart(){
             document.getElementById("loading").style.visibility = "hidden";
 
             //draw chart and send to div
-            chart.container("container");
+            chart.container("chartContainer");
             chart.draw();
 
             //call overOrUnder function
