@@ -109,10 +109,12 @@ async function returnChart(){
         
         if(Object.keys(coinNameDict).includes(coinNameInput)==false){
             alertify.error('Please choose a valid coin name');
+            document.getElementById("loading").style.visibility = "hidden";
         }
 
         if(startDate==''|endDate==''){
             alertify.error('Please fill in both dates');
+            document.getElementById("loading").style.visibility = "hidden";
         }
 
     return;
